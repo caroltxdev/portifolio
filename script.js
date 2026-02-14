@@ -112,11 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (isValid) {
-        /*
-          Integre com um serviço real quando quiser:
-          - FormSubmit: https://formsubmit.co/
-          - EmailJS:    https://www.emailjs.com/
-        */
+  
         form.reset();
         successMsg.style.display = 'block';
         setTimeout(() => {
