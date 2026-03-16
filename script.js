@@ -58,6 +58,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealElements.forEach((el) => revealObserver.observe(el));
 
+  /* ----------------------------------------------------------
+   CARROSSEL DE PROJETOS
+---------------------------------------------------------- */
+const grid      = document.getElementById('projects-grid');
+const btnPrev   = document.getElementById('carousel-prev');
+const btnNext   = document.getElementById('carousel-next');
+const dotsWrap  = document.getElementById('carousel-dots');
+
+if (grid && btnPrev && btnNext) {
+  const cards        = [...grid.querySelectorAll('.project-card')];
+  const visibleCount = () => window.innerWidth <= 768 ? 1 : 2;
+  let current        = 0;
+
+  // Cria os dots
+  function buildDots() {
+    dotsWrap.innerHTML = '';
+    const total = cards.length - visibleCount() + 1;
+    for (let i = 0; i < total; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'carousel-dot' + (i === current ? ' active' : '');
+      dot.setAttribute('aria-label', `Ir para projeto ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  function updateDots() {
+    [...dotsWrap.querySelectorAll('.carousel-dot')].forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+  }
+
+  function goTo(index) {
+    const total    = cards.length - visibleCount() + 1;
+    current        = Math.max(0, Math.min(index, total - 1));
+    const cardW    = cards[0].offsetWidth + 32; // largura + gap
+    grid.style.transform = `translateX(-${current * cardW}px)`;
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === total - 1;
+    updateDots();
+  }
+
+  btnPrev.addEventListener('click', () => goTo(current - 1));
+  btnNext.addEventListener('click', () => goTo(current + 1));
+
+  // Swipe touch
+  let touchStartX = 0;
+  grid.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  grid.addEventListener('touchend',   e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) goTo(current + (diff > 0 ? 1 : -1));
+  });
+
+  // Recalcula ao redimensionar
+  window.addEventListener('resize', () => {
+    buildDots();
+    goTo(0);
+  });
+
+  buildDots();
+  goTo(0);
+}
 
   /* ----------------------------------------------------------
      3. VALIDAÇÃO DO FORMULÁRIO DE CONTATO

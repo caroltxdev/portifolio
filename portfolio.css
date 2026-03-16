@@ -296,15 +296,96 @@ a {
 /* ============================================================
    PROJETOS
 ============================================================ */
+/* ============================================================
+   PROJETOS — CARROSSEL
+============================================================ */
 #projetos {
   padding: 96px 0 80px;
   background: #0e0f16;
 }
 
+.carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  display: flex;
   gap: 32px;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.project-card {
+  min-width: calc(50% - 16px);
+  flex-shrink: 0;
+}
+
+/* Botões de navegação */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(192, 75, 242, 0.15);
+  border: 1px solid rgba(192, 75, 242, 0.4);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), border-color var(--transition), transform 0.2s;
+  backdrop-filter: blur(6px);
+}
+
+.carousel-btn:hover {
+  background: rgba(192, 75, 242, 0.4);
+  border-color: var(--cor2);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-btn-prev { left: -22px; }
+.carousel-btn-next { right: -22px; }
+.carousel-btn:disabled {
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* Dots */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 32px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s, width 0.3s;
+  padding: 0;
+}
+
+.carousel-dot.active {
+  background: var(--cor2);
+  width: 24px;
+}
+
+/* Mobile: 1 card por vez */
+@media (max-width: 768px) {
+  .project-card {
+    min-width: 100%;
+  }
+  .carousel-btn-prev { left: -12px; }
+  .carousel-btn-next { right: -12px; }
 }
 
 .project-card {
